@@ -13,7 +13,6 @@ export class AuthController {
   loginUser() {}
 
   @Post('register')
-  @UsePipes(ValidationPipe)
   registerUser(@Body() registerUserDto: RegisterUserDto) {
     console.log(registerUserDto);
   }
