@@ -13,6 +13,7 @@ export class RegisterUserDto {
   @IsNotEmpty()
   @MaxLength(32)
   userName: string;
+
   @IsNotEmpty()
   @MaxLength(32)
   password: string;
