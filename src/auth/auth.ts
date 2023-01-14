@@ -1,3 +1,5 @@
+import { LoginUserParams } from 'src/utils/@types';
+
 export interface IAuthService {
-  validateUser();
+  validateUser(loginUserParams: LoginUserParams);
 }
