@@ -8,7 +8,7 @@ import {
 import { IUsersService } from 'src/users/users';
 import { LoginUserParams } from 'src/utils/@types';
 import { Services } from 'src/utils/constants';
-import { compareHash } from 'src/utils/helpers';
+import { compare } from 'src/utils/helpers';
 import { IAuthService } from './auth';
 
 @Injectable()
@@ -20,10 +20,14 @@ export class AuthService implements IAuthService {
     const user = await this.userService.findUser({
       email: loginUserParams.email,
     });
+    console.log(user);
 
     if (!user)
       throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
-
-    return compareHash(loginUserParams.password, user.password);
+    const isPasswordCorrect = await compare(
+      loginUserParams.password,
+      user.password,
+    );
+    return isPasswordCorrect ? user : null;
   }
 }
