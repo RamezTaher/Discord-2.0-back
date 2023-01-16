@@ -13,7 +13,7 @@ export class UsersService implements IUsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
-  async createUser(userParams: CreateUserParams) {
+  async createUser(userParams: CreateUserParams): Promise<User> {
     const hashedPassword = await hashPassword(userParams.password);
     const emailExists = await this.userRepository.findOne({
       email: userParams.email,

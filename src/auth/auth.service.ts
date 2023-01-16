@@ -20,7 +20,6 @@ export class AuthService implements IAuthService {
     const user = await this.userService.findUser({
       email: loginUserParams.email,
     });
-    console.log(user);
 
     if (!user)
       throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
