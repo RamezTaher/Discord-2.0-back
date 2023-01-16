@@ -15,10 +15,10 @@ export class UsersService implements IUsersService {
   ) {}
   async createUser(userParams: CreateUserParams) {
     const hashedPassword = await hashPassword(userParams.password);
-    const emailExists = await this.userRepository.findOneBy({
+    const emailExists = await this.userRepository.findOne({
       email: userParams.email,
     });
-    const usernameExists = await this.userRepository.findOneBy({
+    const usernameExists = await this.userRepository.findOne({
       userName: userParams.userName,
     });
 
@@ -40,6 +40,6 @@ export class UsersService implements IUsersService {
   }
 
   async findUser(findUserParams: FindUserParams): Promise<User> {
-    return this.userRepository.findOneBy(findUserParams);
+    return this.userRepository.findOne(findUserParams);
   }
 }
