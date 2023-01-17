@@ -13,6 +13,10 @@ export class UsersService implements IUsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
+
+  async findUser(findUserParams: FindUserParams): Promise<User> {
+    return this.userRepository.findOne(findUserParams);
+  }
   async createUser(userParams: CreateUserParams): Promise<User> {
     const hashedPassword = await hashPassword(userParams.password);
     const emailExists = await this.userRepository.findOne({
@@ -37,9 +41,5 @@ export class UsersService implements IUsersService {
       password: hashedPassword,
     });
     return this.userRepository.save(newUser);
-  }
-
-  async findUser(findUserParams: FindUserParams): Promise<User> {
-    return this.userRepository.findOne(findUserParams);
   }
 }
