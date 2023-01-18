@@ -5,9 +5,10 @@ import { Services } from 'src/utils/constants';
 import { UsersModule } from 'src/users/users.module';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { Serializer } from './utils/Serilazier';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, PassportModule.register({ session: true })],
   providers: [
     LocalStrategy,
     Serializer,

@@ -27,6 +27,7 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async loginUser(@Req() req: Request, @Res() res: Response) {
+    console.log(res.cookie);
     return res.send(HttpStatus.OK);
   }
 

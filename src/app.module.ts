@@ -21,6 +21,7 @@ import { PassportModule } from '@nestjs/passport';
       database: process.env.MYSQL_BD,
       synchronize: true,
       entities,
+      logging: false,
     }),
   ],
   controllers: [],
