@@ -14,12 +14,13 @@ async function bootstrap() {
   const sessionRepository = getRepository(Session);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({ origin: ['http://localhost:3000'], credentials: true });
+  app.enableCors({ origin: ['http://127.0.0.1:3000'], credentials: true });
   app.use(
     session({
       secret: SECRET_CODE,
       saveUninitialized: false,
       resave: false,
+      name: 'DISCORD_SESSION_ID',
       cookie: {
         maxAge: 3600000 * 48,
       },
