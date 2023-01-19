@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   HttpStatus,
+  Session,
 } from '@nestjs/common';
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
@@ -26,8 +27,8 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async loginUser(@Req() req: Request, @Res() res: Response) {
-    console.log(res.cookie);
+  async loginUser(@Session() sess, @Res() res: Response) {
+    console.log(sess);
     return res.send(HttpStatus.OK);
   }
 
@@ -39,8 +40,8 @@ export class AuthController {
   @Post('logout')
   logout() {}
 
-  @Get('me')
   @UseGuards(AuthenticatedGuard)
+  @Get('me')
   me(@Req() req: Request, @Res() res: Response) {
     res.send(req.user);
   }

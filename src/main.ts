@@ -8,6 +8,7 @@ import { getRepository } from 'typeorm';
 import { Session } from './utils/typeorm';
 import { TypeormStore } from 'connect-typeorm/out';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { setEngine } from 'crypto';
 
 async function bootstrap() {
   const { PORT, SECRET_CODE } = process.env;
@@ -15,7 +16,10 @@ async function bootstrap() {
   const sessionRepository = getRepository(Session);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({ origin: ['http://127.0.0.1:3000'], credentials: true });
+  app.enableCors({
+    origin: ['http://127.0.0.1:3000', 'http://localhost:3000'],
+    credentials: true,
+  });
   app.set('trust proxy', 'loopback');
   app.use(
     session({
@@ -24,7 +28,7 @@ async function bootstrap() {
       resave: false,
       name: 'DISCORD_SESSION_ID',
       cookie: {
-        maxAge: 3600000 * 48,
+        maxAge: 3600000,
       },
       store: new TypeormStore().connect(sessionRepository),
     }),
