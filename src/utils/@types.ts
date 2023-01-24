@@ -16,6 +16,8 @@ export type FindUserParams = Partial<{
   id: number;
 }>;
 
+export type ChannelIdType = 'receiver' | 'sender';
+
 export type CreateChannelParams = {
   senderId: number;
   senderUserName: string;
