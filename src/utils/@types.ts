@@ -15,3 +15,11 @@ export type FindUserParams = Partial<{
   email: string;
   id: number;
 }>;
+
+export type CreateChannelParams = {
+  senderId: number;
+  senderUserName: string;
+  receiverId: number;
+  receiverUserName: string;
+  message: string;
+};

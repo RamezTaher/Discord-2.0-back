@@ -27,14 +27,15 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async loginUser(@Session() sess, @Res() res: Response) {
-    console.log(sess);
+  async loginUser(@Res() res: Response) {
     return res.send(HttpStatus.OK);
   }
 
   @Post('register')
-  async registerUser(@Body() registerUserDto: RegisterUserDto) {
-    return instanceToPlain(await this.usersService.createUser(registerUserDto));
+  async registerUser(@Body() registerUserPayload: RegisterUserDto) {
+    return instanceToPlain(
+      await this.usersService.createUser(registerUserPayload),
+    );
   }
 
   @Post('logout')
