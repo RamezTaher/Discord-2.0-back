@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './utils/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { ChannelsModule } from './channels/channels.module';
+import { ChannelMemberModule } from './channel-member/channel-member.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ChannelsModule } from './channels/channels.module';
       logging: false,
     }),
     ChannelsModule,
+    ChannelMemberModule,
   ],
   controllers: [],
   providers: [],
