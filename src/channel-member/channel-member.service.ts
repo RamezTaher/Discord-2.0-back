@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindChannelMemberParams } from 'src/utils/@types';
+import {
+  CreateChannelMemeberParams,
+  FindChannelMemberParams,
+} from 'src/utils/@types';
 import { ChannelMember } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 import { IChannelMemberService } from './channel-member';
@@ -12,11 +15,14 @@ export class ChannelMemberService implements IChannelMemberService {
     private readonly channelMemberRepository: Repository<ChannelMember>,
   ) {}
   findChannelMemeber(
-    param: FindChannelMemberParams,
+    params: FindChannelMemberParams,
   ): Promise<ChannelMember | null> {
-    return this.channelMemberRepository.findOne({ id: param.id });
+    return this.channelMemberRepository.findOne({ id: params.id });
   }
-  createChannelMemeber(): Promise<ChannelMember> {
-    throw new Error('f');
+  createChannelMemeber(
+    params: CreateChannelMemeberParams,
+  ): Promise<ChannelMember> {
+    const newChannelMember = this.channelMemberRepository.create(params);
+    return this.channelMemberRepository.save(newChannelMember);
   }
 }

@@ -12,9 +12,6 @@ export class ChannelMember {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  userName: string;
-
   @ManyToMany(() => Channel, (channel) => channel.channelMembers)
   @JoinTable()
   channels: Channel[];

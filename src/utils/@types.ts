@@ -20,18 +20,16 @@ export type FindUserParams = Partial<{
 export type FindChannelMemberParams = Partial<{
   id: number;
 }>;
+export type CreateChannelMemeberParams = {
+  id: number;
+};
 
 export type ChannelIdType = 'receiver' | 'sender';
 
 export type CreateChannelParams = {
   senderId: number;
-  senderUserName: string;
   receiverId: number;
-  receiverUserName: string;
   message: string;
-};
-export type CreateChannelMemeberParams = {
-  id: number;
 };
 
 export interface AuthenticatedRequest extends Request {

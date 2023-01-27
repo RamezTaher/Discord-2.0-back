@@ -19,8 +19,6 @@ export class ChannelsController {
     @AuthUser() user: User,
     @Body() createChannelPayload: CreateChannelDto,
   ) {
-    const userQueriedBD = await this.usersService.findUser({ id: user.id });
-    console.log(userQueriedBD);
-    this.channelsService.createChannel(userQueriedBD, createChannelPayload);
+    return this.channelsService.createChannel(user, createChannelPayload);
   }
 }

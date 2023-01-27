@@ -14,6 +14,10 @@ export class UsersService implements IUsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  async saveUser(user: User) {
+    return this.userRepository.save(user);
+  }
+
   async findUser(findUserParams: FindUserParams): Promise<User> {
     return this.userRepository.findOne(findUserParams, {
       relations: ['channelMember'],
