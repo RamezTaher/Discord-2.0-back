@@ -4,7 +4,7 @@ import { IChannelMemberService } from 'src/channel-member/channel-member';
 import { IUsersService } from 'src/users/users';
 import { CreateChannelParams } from 'src/utils/@types';
 import { Services } from 'src/utils/constants';
-import { Channel, User } from 'src/utils/typeorm';
+import { Channel, ChannelMember, User } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 import { IChannelsService } from './channels';
 
@@ -18,34 +18,47 @@ export class ChannelsService implements IChannelsService {
     @Inject(Services.USERS) private readonly userService: IUsersService,
   ) {}
   async createChannel(user: User, params: CreateChannelParams) {
+    const channelMembers: ChannelMember[] = [];
     const sender = await this.userService.findUser({ id: user.id });
-
     if (!sender.channelMember) {
-      const newChannelMember =
-        await this.channelMemberService.createChannelMemeber({
-          id: params.senderId,
-        });
-      sender.channelMember = newChannelMember;
-      await this.userService.saveUser(sender);
+      const channelMember = await this.createChannelMemberAndSaveUser(
+        sender,
+        params.senderId,
+      );
+      channelMembers.push(channelMember);
+    } else {
+      channelMembers.push(sender.channelMember);
     }
+
     const receiver = await this.userService.findUser({ id: params.receiverId });
-
-    console.log(receiver);
-
     if (!receiver || receiver.id === sender.id) {
       throw new HttpException(
         'Impossible To Start A Channel',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     if (!receiver.channelMember) {
-      const newChannelMember =
-        await this.channelMemberService.createChannelMemeber({
-          id: params.receiverId,
-        });
-      receiver.channelMember = newChannelMember;
-      await this.userService.saveUser(receiver);
+      const channelMember = await this.createChannelMemberAndSaveUser(
+        receiver,
+        params.receiverId,
+      );
+
+      channelMembers.push(channelMember);
+    } else {
+      channelMembers.push(receiver.channelMember);
     }
+
+    const newChannel = this.channelRepository.create({ channelMembers });
+
+    return this.channelRepository.save(newChannel);
+  }
+
+  public async createChannelMemberAndSaveUser(user: User, id: number) {
+    const channelMember = await this.channelMemberService.createChannelMemeber({
+      id,
+    });
+    user.channelMember = channelMember;
+    await this.userService.saveUser(user);
+    return channelMember;
   }
 }
