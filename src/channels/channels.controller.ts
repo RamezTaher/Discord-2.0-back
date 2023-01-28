@@ -1,4 +1,12 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/auth/utils/Guard';
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
@@ -14,11 +22,28 @@ export class ChannelsController {
     @Inject(Services.CHANNELS) private channelsService: IChannelsService,
     @Inject(Services.USERS) private usersService: IUsersService,
   ) {}
+  // Create the Channel
   @Post()
   async createChannel(
     @AuthUser() user: User,
     @Body() createChannelPayload: CreateChannelDto,
   ) {
     return this.channelsService.createChannel(user, createChannelPayload);
+  }
+
+  // Get The Channel
+  @Get()
+  async getChannel(@AuthUser() user: User) {
+    const channel = await this.channelsService.getChannel(
+      user.channelMember.id,
+    );
+
+    return channel;
+  }
+
+  @Get(':id')
+  async getConversationById(@Param('id') id: number) {
+    const channel = await this.channelsService.getChannelById(id);
+    return channel;
   }
 }

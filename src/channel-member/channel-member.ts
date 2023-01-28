@@ -11,4 +11,5 @@ export interface IChannelMemberService {
   createChannelMemeber(
     params: CreateChannelMemeberParams,
   ): Promise<ChannelMember>;
+  findChannelMemebersChannels(id: number);
 }

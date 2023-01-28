@@ -25,4 +25,21 @@ export class ChannelMemberService implements IChannelMemberService {
     const newChannelMember = this.channelMemberRepository.create(params);
     return this.channelMemberRepository.save(newChannelMember);
   }
+
+  findChannelMemebersChannels(id: number) {
+    return this.channelMemberRepository
+      .createQueryBuilder('channelMembers')
+      .leftJoinAndSelect('channelMembers.channels', 'channel')
+      .where('channelMembers.id = :id', { id })
+      .leftJoinAndSelect('channel.channelMembers', 'channelMembers')
+      .leftJoin('channelMembers.user', 'user')
+      .addSelect([
+        'user.firstName',
+        'user.lastName',
+        'user.email',
+        'user.userName',
+        'user.id',
+      ])
+      .getRawOne();
+  }
 }
