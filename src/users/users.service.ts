@@ -19,9 +19,7 @@ export class UsersService implements IUsersService {
   }
 
   async findUser(findUserParams: FindUserParams): Promise<User> {
-    return this.userRepository.findOne(findUserParams, {
-      relations: ['channelMember'],
-    });
+    return this.userRepository.findOne(findUserParams);
   }
   async createUser(userParams: CreateUserParams): Promise<User> {
     const hashedPassword = await hashPassword(userParams.password);

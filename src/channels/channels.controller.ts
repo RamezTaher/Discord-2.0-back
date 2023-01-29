@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/auth/utils/Guard';
-import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
 import { AuthUser } from 'src/utils/decorators';
 import { User } from 'src/utils/typeorm';
@@ -20,7 +19,6 @@ import { CreateChannelDto } from './dtos/CreateChannel';
 export class ChannelsController {
   constructor(
     @Inject(Services.CHANNELS) private channelsService: IChannelsService,
-    @Inject(Services.USERS) private usersService: IUsersService,
   ) {}
   // Create the Channel
   @Post()
@@ -34,9 +32,7 @@ export class ChannelsController {
   // Get The Channel
   @Get()
   async getChannel(@AuthUser() user: User) {
-    const channel = await this.channelsService.getChannel(
-      user.channelMember.id,
-    );
+    const channel = await this.channelsService.getChannels(user.id);
 
     return channel;
   }
