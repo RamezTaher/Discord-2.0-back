@@ -13,7 +13,7 @@ import {
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
 import { IAuthService } from './auth';
-import { RegisterUserDto } from './dtos/RegisterUser.dto';
+import { RegisterUserDto } from './dtos/RegisterUserDto';
 import { instanceToPlain } from 'class-transformer';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guard';
 import { Request, Response } from 'express';

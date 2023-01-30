@@ -21,7 +21,6 @@ export class ChannelsService implements IChannelsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     const isConversationExists = await this.channelRepository.findOne({
       where: [
         {
@@ -40,7 +39,6 @@ export class ChannelsService implements IChannelsService {
         HttpStatus.CONFLICT,
       );
     }
-
     const receiver = await this.userService.findUser({ id: params.receiverId });
     if (!receiver)
       throw new HttpException(
@@ -52,7 +50,6 @@ export class ChannelsService implements IChannelsService {
       sender: user,
       receiver,
     });
-
     return this.channelRepository.save(newChannel);
   }
 
