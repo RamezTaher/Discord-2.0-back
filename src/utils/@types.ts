@@ -31,6 +31,12 @@ export type CreateChannelParams = {
   message: string;
 };
 
+export type CreateMessageParams = {
+  messageContent: string;
+  channelId: number;
+  user: User;
+};
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
