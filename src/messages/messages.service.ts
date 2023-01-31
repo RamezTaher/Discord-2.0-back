@@ -2,9 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
 import { CreateMessageParams } from 'src/utils/@types';
-import { Channel, Message, User } from 'src/utils/typeorm';
+import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
-import { measureMemory } from 'vm';
 
 @Injectable()
 export class MessagesService {
