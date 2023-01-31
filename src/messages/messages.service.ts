@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
 import { CreateMessageParams } from 'src/utils/@types';
-import { Channel, Message, User } from 'src/utils/typeorm';
+import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -29,13 +29,14 @@ export class MessagesService {
       channel.receiver.id !== params.user.id
     )
       throw new HttpException('Users Do Not Match', HttpStatus.FORBIDDEN);
-    channel.sender = instanceToPlain(channel.sender) as User;
-    channel.receiver = instanceToPlain(channel.receiver) as User;
     const newMessage = this.messageRepository.create({
       messageContent: params.messageContent,
       channel,
       sender: instanceToPlain(params.user),
     });
+    const savedMessage = await this.messageRepository.save(newMessage);
+    channel.lastMessageSent = savedMessage;
+    await this.channelRepository.save(channel);
     return this.messageRepository.save(newMessage);
   }
 }
