@@ -17,7 +17,7 @@ export class Message {
   messageContent: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: number;
+  sentAt: number;
 
   @ManyToOne(() => User, (user) => user.messages)
   sender: User;
