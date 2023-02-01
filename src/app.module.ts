@@ -7,6 +7,8 @@ import entities from './utils/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { ChannelsModule } from './channels/channels.module';
 import { MessagesModule } from './messages/messages.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { GatewaysModule } from './gateways/gateways.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { MessagesModule } from './messages/messages.module';
     }),
     ChannelsModule,
     MessagesModule,
+    EventEmitterModule.forRoot(),
+    GatewaysModule,
   ],
   controllers: [],
   providers: [],

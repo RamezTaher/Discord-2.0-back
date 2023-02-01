@@ -37,7 +37,7 @@ export class MessagesService {
     const savedMessage = await this.messageRepository.save(newMessage);
     channel.lastMessageSent = savedMessage;
     await this.channelRepository.save(channel);
-    return this.messageRepository.save(newMessage);
+    return savedMessage;
   }
 
   async getMessagesByChannelId(channelId: number): Promise<Message[]> {

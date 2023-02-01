@@ -13,6 +13,7 @@ import { AuthUser } from 'src/utils/decorators';
 import { User } from 'src/utils/typeorm';
 import { CreateMessageDto } from './dtos/CreateMessageDto';
 import { IMessagesService } from './messages';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @UseGuards(AuthenticatedGuard)
 @Controller(Routes.MESSAGES)
@@ -20,6 +21,7 @@ export class MessagesController {
   constructor(
     @Inject(Services.MESSAGES)
     private readonly messagesService: IMessagesService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   @Post()
@@ -27,10 +29,12 @@ export class MessagesController {
     @AuthUser() user: User,
     @Body() createMessagePayload: CreateMessageDto,
   ) {
-    return await this.messagesService.createMessage({
-      user,
+    const newMessage = await this.messagesService.createMessage({
       ...createMessagePayload,
+      user,
     });
+    this.eventEmitter.emit('message.create', newMessage);
+    return;
   }
 
   @Get(':id')
