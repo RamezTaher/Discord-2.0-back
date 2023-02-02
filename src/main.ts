@@ -8,7 +8,6 @@ import { getRepository } from 'typeorm';
 import { Session } from './utils/typeorm';
 import { TypeormStore } from 'connect-typeorm/out';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { setEngine } from 'crypto';
 
 async function bootstrap() {
   const { PORT, SECRET_CODE } = process.env;
