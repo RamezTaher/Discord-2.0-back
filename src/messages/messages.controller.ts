@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -40,8 +41,11 @@ export class MessagesController {
   @Get(':id')
   async getMessagesByChannelId(
     @AuthUser() user: User,
-    @Param('id') channelId: number,
+    @Param('id', ParseIntPipe) channelId: number,
   ) {
-    return await this.messagesService.getMessagesByChannelId(channelId);
+    const messages = await this.messagesService.getMessagesByChannelId(
+      channelId,
+    );
+    return { id: channelId, messages };
   }
 }
