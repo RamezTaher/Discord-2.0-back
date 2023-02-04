@@ -14,27 +14,29 @@ export class WebsocketAdapter extends IoAdapter {
       console.log('Inside Websocket Adapter Middleware');
       const { cookie: clientCookie } = socket.handshake.headers;
       if (!clientCookie) {
-        console.log('no cookies');
-        return next(new Error('Not Authenticated. No cookies were sent'));
+        console.log('No Cookies');
+        return next(new Error('No Cookies You Need To Log In'));
       }
-      const { CHAT_APP_SESSION_ID } = cookie.parse(clientCookie);
-      if (!CHAT_APP_SESSION_ID) {
-        console.log('CHAT_APP_SESSION_ID DOES NOT EXIST');
-        return next(new Error('Not Authenticated'));
+      const { DISCORD_SESSION_ID } = cookie.parse(clientCookie);
+      if (!DISCORD_SESSION_ID) {
+        console.log('DISCORD_SESSION_ID DOES NOT EXIST');
+        return next(new Error('You Need To Log In'));
       }
-      console.log(CHAT_APP_SESSION_ID);
+      console.log(DISCORD_SESSION_ID);
       const signedCookie = cookieParser.signedCookie(
-        CHAT_APP_SESSION_ID,
-        process.env.COOKIE_SECRET,
+        DISCORD_SESSION_ID,
+        process.env.SECRET_CODE,
       );
       console.log(signedCookie);
       if (!signedCookie) return next(new Error('Error signing cookie'));
-      const sessionDB = await sessionRepository.findOne({ id: signedCookie });
-      const userDB = plainToInstance(
+      const sessionFromDB = await sessionRepository.findOne({
+        id: signedCookie,
+      });
+      const userFromDB = plainToInstance(
         User,
-        JSON.parse(sessionDB.json).passport.user,
+        JSON.parse(sessionFromDB.json).passport.user,
       );
-      socket.user = userDB;
+      socket.user = userFromDB;
       next();
     });
     return server;
