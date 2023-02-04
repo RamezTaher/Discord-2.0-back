@@ -56,6 +56,7 @@ export class ChannelsService implements IChannelsService {
   async getChannels(id: number) {
     const channels = await this.channelRepository
       .createQueryBuilder('channel')
+      .leftJoinAndSelect('channel.lastMessageSent', 'lastMessageSent')
       .leftJoin('channel.sender', 'sender')
       .addSelect([
         'sender.id',
