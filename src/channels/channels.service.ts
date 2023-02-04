@@ -75,6 +75,7 @@ export class ChannelsService implements IChannelsService {
       ])
       .where('sender.id=:id', { id })
       .orWhere('receiver.id=:id', { id })
+      .orderBy('channel.lastMessageSentAt', 'DESC')
       .getMany();
 
     return channels;

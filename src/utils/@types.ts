@@ -1,4 +1,4 @@
-import { User } from './typeorm';
+import { Channel, Message, User } from './typeorm';
 
 export type CreateUserParams = {
   email: string;
@@ -35,6 +35,11 @@ export type CreateMessageParams = {
   messageContent: string;
   channelId: number;
   user: User;
+};
+
+export type CreateMessageResponse = {
+  message: Message;
+  channel: Channel;
 };
 
 export interface AuthenticatedRequest extends Request {

@@ -14,10 +14,10 @@ export class MessagesService {
     private readonly channelRepository: Repository<Channel>,
   ) {}
 
-  async createMessage(params: CreateMessageParams): Promise<Message> {
+  async createMessage(params: CreateMessageParams) {
     const channel = await this.channelRepository.findOne({
       where: { id: params.channelId },
-      relations: ['sender', 'receiver'],
+      relations: ['sender', 'receiver', 'lastMessageSent'],
     });
     if (!channel)
       throw new HttpException(
@@ -29,15 +29,17 @@ export class MessagesService {
       channel.receiver.id !== params.user.id
     )
       throw new HttpException('Users Do Not Match', HttpStatus.FORBIDDEN);
+
     const newMessage = this.messageRepository.create({
       messageContent: params.messageContent,
       channel,
       sender: instanceToPlain(params.user),
     });
+
     const savedMessage = await this.messageRepository.save(newMessage);
     channel.lastMessageSent = savedMessage;
-    await this.channelRepository.save(channel);
-    return savedMessage;
+    const updatedChannel = await this.channelRepository.save(channel);
+    return { messsage: savedMessage, channel: updatedChannel };
   }
 
   async getMessagesByChannelId(channelId: number): Promise<Message[]> {
