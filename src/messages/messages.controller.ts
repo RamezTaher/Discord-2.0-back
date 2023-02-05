@@ -30,11 +30,11 @@ export class MessagesController {
     @AuthUser() user: User,
     @Body() createMessagePayload: CreateMessageDto,
   ) {
-    const newMessage = await this.messagesService.createMessage({
+    const res = await this.messagesService.createMessage({
       ...createMessagePayload,
       user,
     });
-    this.eventEmitter.emit('message.create', newMessage);
+    this.eventEmitter.emit('message.create', res);
     return;
   }
 

@@ -37,19 +37,22 @@ export class MessagingGateway implements OnGatewayConnection {
   @SubscribeMessage('createMessage')
   handleCreateMessage(@MessageBody() data: any) {
     console.log('Create Message');
+    console.log(data);
   }
 
   @OnEvent('message.create')
   handleMessageCreateEvent(payload: CreateMessageResponse) {
-    const { message } = payload;
     console.log('Inside message.create');
-    const senderSocket = this.gatewaysSessionManager.getUserSocket(
-      message.sender.id,
-    );
+    const {
+      sender,
+      channel: { sender: channelSender, receiver: channelReceiver },
+    } = payload.message;
+
+    const senderSocket = this.gatewaysSessionManager.getUserSocket(sender.id);
     const receiverSocket =
-      message.sender === message.channel.sender
-        ? this.gatewaysSessionManager.getUserSocket(message.channel.receiver.id)
-        : this.gatewaysSessionManager.getUserSocket(message.channel.sender.id);
+      sender.id === channelSender.id
+        ? this.gatewaysSessionManager.getUserSocket(channelReceiver.id)
+        : this.gatewaysSessionManager.getUserSocket(channelSender.id);
     if (senderSocket) {
       senderSocket.emit('onMessage', payload);
     }

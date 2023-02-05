@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
-import { CreateMessageParams } from 'src/utils/@types';
+import { CreateMessageParams, CreateMessageResponse } from 'src/utils/@types';
 import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 
@@ -14,7 +14,9 @@ export class MessagesService {
     private readonly channelRepository: Repository<Channel>,
   ) {}
 
-  async createMessage(params: CreateMessageParams) {
+  async createMessage(
+    params: CreateMessageParams,
+  ): Promise<CreateMessageResponse> {
     const channel = await this.channelRepository.findOne({
       where: { id: params.channelId },
       relations: ['sender', 'receiver', 'lastMessageSent'],
@@ -39,7 +41,7 @@ export class MessagesService {
     const savedMessage = await this.messageRepository.save(newMessage);
     channel.lastMessageSent = savedMessage;
     const updatedChannel = await this.channelRepository.save(channel);
-    return { messsage: savedMessage, channel: updatedChannel };
+    return { message: savedMessage, channel: updatedChannel };
   }
 
   async getMessagesByChannelId(channelId: number): Promise<Message[]> {
