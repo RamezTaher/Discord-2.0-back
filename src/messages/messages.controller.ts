@@ -30,12 +30,12 @@ export class MessagesController {
     @AuthUser() user: User,
     @Body() createMessagePayload: CreateMessageDto,
   ) {
-    const res = await this.messagesService.createMessage({
+    const msg = await this.messagesService.createMessage({
       ...createMessagePayload,
       user,
     });
-    this.eventEmitter.emit('message.create', res);
-    return;
+    this.eventEmitter.emit('message.create', msg);
+    return msg;
   }
 
   @Get(':id')

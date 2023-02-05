@@ -14,9 +14,7 @@ export class MessagesService {
     private readonly channelRepository: Repository<Channel>,
   ) {}
 
-  async createMessage(
-    params: CreateMessageParams,
-  ): Promise<CreateMessageResponse> {
+  async createMessage(params: CreateMessageParams): Promise<Message> {
     const channel = await this.channelRepository.findOne({
       where: { id: params.channelId },
       relations: ['sender', 'receiver', 'lastMessageSent'],
@@ -40,8 +38,8 @@ export class MessagesService {
 
     const savedMessage = await this.messageRepository.save(newMessage);
     channel.lastMessageSent = savedMessage;
-    const updatedChannel = await this.channelRepository.save(channel);
-    return { message: savedMessage, channel: updatedChannel };
+    await this.channelRepository.save(channel);
+    return savedMessage;
   }
 
   async getMessagesByChannelId(channelId: number): Promise<Message[]> {

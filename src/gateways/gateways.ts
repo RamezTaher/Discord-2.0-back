@@ -11,6 +11,7 @@ import { Server } from 'http';
 import { CreateMessageResponse } from 'src/utils/@types';
 import { Services } from 'src/utils/constants';
 import { AuthenticatedSocket } from 'src/utils/interfaces';
+import { Message } from 'src/utils/typeorm';
 import { IGatewaySessionManager } from './gateways.interfaces';
 
 @WebSocketGateway({
@@ -41,12 +42,12 @@ export class MessagingGateway implements OnGatewayConnection {
   }
 
   @OnEvent('message.create')
-  handleMessageCreateEvent(payload: CreateMessageResponse) {
+  handleMessageCreateEvent(payload: Message) {
     console.log('Inside message.create');
     const {
       sender,
       channel: { sender: channelSender, receiver: channelReceiver },
-    } = payload.message;
+    } = payload;
 
     const senderSocket = this.gatewaysSessionManager.getUserSocket(sender.id);
     const receiverSocket =
