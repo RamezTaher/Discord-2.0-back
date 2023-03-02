@@ -14,5 +14,11 @@ import { MessagesService } from './messages.service';
       useClass: MessagesService,
     },
   ],
+  exports: [
+    {
+      provide: Services.MESSAGES,
+      useClass: MessagesService,
+    },
+  ],
 })
 export class MessagesModule {}

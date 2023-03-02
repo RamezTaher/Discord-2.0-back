@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IMessagesService } from 'src/messages/messages';
 import { IUsersService } from 'src/users/users';
 import { CreateChannelParams } from 'src/utils/@types';
 import { Services } from 'src/utils/constants';
@@ -13,6 +14,8 @@ export class ChannelsService implements IChannelsService {
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
     @Inject(Services.USERS) private readonly userService: IUsersService,
+    @Inject(Services.MESSAGES)
+    private readonly messageService: IMessagesService,
   ) {}
   async createChannel(user: User, params: CreateChannelParams) {
     if (user.id === params.receiverId) {
@@ -50,6 +53,7 @@ export class ChannelsService implements IChannelsService {
       sender: user,
       receiver,
     });
+
     return this.channelRepository.save(newChannel);
   }
 
