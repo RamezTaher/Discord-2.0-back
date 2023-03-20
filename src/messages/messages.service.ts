@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
-import { CreateMessageParams, CreateMessageResponse } from 'src/utils/@types';
+import { CreateMessageParams } from 'src/utils/@types';
 import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 

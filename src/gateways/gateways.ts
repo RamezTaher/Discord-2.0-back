@@ -6,6 +6,7 @@ import {
   MessageBody,
   OnGatewayConnection,
   WebSocketServer,
+  OnGatewayInit,
 } from '@nestjs/websockets';
 import { Server } from 'http';
 import { CreateMessageResponse } from 'src/utils/@types';
@@ -20,11 +21,12 @@ import { IGatewaySessionManager } from './gateways.interfaces';
     credentials: true,
   },
 })
-export class MessagingGateway implements OnGatewayConnection {
+export class MessagingGateway implements OnGatewayInit, OnGatewayConnection {
   constructor(
     @Inject(Services.GATEWAYS_SESSION_MANAGER)
     private readonly gatewaysSessionManager: IGatewaySessionManager,
   ) {}
+
   @WebSocketServer()
   server: Server;
 
@@ -60,5 +62,9 @@ export class MessagingGateway implements OnGatewayConnection {
     if (receiverSocket) {
       receiverSocket.emit('onMessage', payload);
     }
+  }
+
+  afterInit(server: any) {
+    console.log('WebSocket server initialized');
   }
 }

@@ -7,8 +7,6 @@ import {
   UseGuards,
   Req,
   Res,
-  HttpStatus,
-  Session,
 } from '@nestjs/common';
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';

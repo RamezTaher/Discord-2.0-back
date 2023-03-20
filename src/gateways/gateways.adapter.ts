@@ -12,7 +12,8 @@ export class WebsocketAdapter extends IoAdapter {
     const server = super.createIOServer(port, options);
     server.use(async (socket: AuthenticatedSocket, next) => {
       console.log('Inside Websocket Adapter Middleware');
-      const { cookie: clientCookie } = socket.handshake.headers;
+      const clientCookie = socket.handshake.headers.cookie;
+      console.log(socket);
       if (!clientCookie) {
         console.log('No Cookies');
         return next(new Error('No Cookies You Need To Log In'));
