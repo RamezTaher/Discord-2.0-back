@@ -16,8 +16,6 @@ import { Server, Socket } from 'socket.io';
 })
 export class MessagingGateway implements OnGatewayConnection {
   handleConnection(client: Socket, ...args: any[]) {
-    console.log('New Incoming Connection');
-    console.log(client.id);
     client.emit('connected', { status: 'good' });
   }
   @WebSocketServer()
@@ -31,7 +29,6 @@ export class MessagingGateway implements OnGatewayConnection {
   @OnEvent('message.create')
   handleMessageCreateEvent(payload: any) {
     console.log('Inside message.create');
-    console.log(payload);
     this.server.emit('onMessage', payload);
   }
 }
