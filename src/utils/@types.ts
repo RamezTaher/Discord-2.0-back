@@ -27,7 +27,7 @@ export type CreateChannelMemeberParams = {
 export type ChannelIdType = 'receiver' | 'sender';
 
 export type CreateChannelParams = {
-  receiverId: number;
+  email: string;
   message: string;
 };
 

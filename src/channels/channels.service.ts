@@ -17,8 +17,12 @@ export class ChannelsService implements IChannelsService {
     @Inject(Services.MESSAGES)
     private readonly messageService: IMessagesService,
   ) {}
-  async createChannel(user: User, params: CreateChannelParams) {
-    if (user.id === params.receiverId) {
+  async createChannel(user: User, { email, message }: CreateChannelParams) {
+    const receiver = await this.userService.findUser({ email });
+
+    if (!receiver)
+      throw new HttpException('Recipient not found', HttpStatus.BAD_REQUEST);
+    if (user.id === receiver.id) {
       throw new HttpException(
         'We Connot Create This Channel',
         HttpStatus.BAD_REQUEST,
@@ -28,11 +32,11 @@ export class ChannelsService implements IChannelsService {
       where: [
         {
           sender: { id: user.id },
-          receiver: { id: params.receiverId },
+          receiver: { id: receiver.id },
         },
         {
           receiver: { id: user.id },
-          sender: { id: params.receiverId },
+          sender: { id: receiver.id },
         },
       ],
     });
@@ -42,12 +46,6 @@ export class ChannelsService implements IChannelsService {
         HttpStatus.CONFLICT,
       );
     }
-    const receiver = await this.userService.findUser({ id: params.receiverId });
-    if (!receiver)
-      throw new HttpException(
-        'No User Founded With Such ID',
-        HttpStatus.BAD_REQUEST,
-      );
 
     const newChannel = this.channelRepository.create({
       sender: user,
