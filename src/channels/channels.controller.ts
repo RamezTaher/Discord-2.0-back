@@ -13,12 +13,15 @@ import { AuthUser } from 'src/utils/decorators';
 import { User } from 'src/utils/typeorm';
 import { IChannelsService } from './channels';
 import { CreateChannelDto } from './dtos/CreateChannelDto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { instanceToPlain } from 'class-transformer';
 
 @Controller(Routes.CHANNELS)
 @UseGuards(AuthenticatedGuard)
 export class ChannelsController {
   constructor(
     @Inject(Services.CHANNELS) private channelsService: IChannelsService,
+    private readonly events: EventEmitter2,
   ) {}
   // Create the Channel
   @Post()
@@ -26,7 +29,12 @@ export class ChannelsController {
     @AuthUser() user: User,
     @Body() createChannelPayload: CreateChannelDto,
   ) {
-    return this.channelsService.createChannel(user, createChannelPayload);
+    const channel = await this.channelsService.createChannel(
+      user,
+      createChannelPayload,
+    );
+    this.events.emit('conversation.create', channel);
+    return instanceToPlain(channel);
   }
 
   // Get Channels

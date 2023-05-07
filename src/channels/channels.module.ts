@@ -16,5 +16,11 @@ import { ChannelsService } from './channels.service';
       useClass: ChannelsService,
     },
   ],
+  exports: [
+    {
+      provide: Services.CHANNELS,
+      useClass: ChannelsService,
+    },
+  ],
 })
 export class ChannelsModule {}
