@@ -55,7 +55,7 @@ export class MessagingGateway implements OnGatewayConnection {
       author.id === creator.id
         ? this.sessions.getUserSocket(receiver.id)
         : this.sessions.getUserSocket(creator.id);
-    console.log(`Recipient Socket: ${JSON.stringify(receiverSocket.user)}`);
+    console.log(`Recipient Socket: ${JSON.stringify(receiverSocket?.user)}`);
 
     if (receiverSocket) {
       receiverSocket.emit('onMessage', payload);
