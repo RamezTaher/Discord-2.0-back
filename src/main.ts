@@ -8,11 +8,14 @@ import { getRepository } from 'typeorm';
 import { Session } from './utils/typeorm';
 import { TypeormStore } from 'connect-typeorm/out';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { WebsocketAdapter } from './gateways/gateways.adapter';
 
 async function bootstrap() {
   const { PORT, SECRET_CODE } = process.env;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const sessionRepository = getRepository(Session);
+  const adapter = new WebsocketAdapter(app);
+  app.useWebSocketAdapter(adapter);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
