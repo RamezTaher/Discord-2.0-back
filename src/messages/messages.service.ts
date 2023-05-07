@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
-import { CreateMessageParams } from 'src/utils/@types';
+import { CreateMessageParams, CreateMessageResponse } from 'src/utils/@types';
 import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 
@@ -14,9 +14,13 @@ export class MessagesService {
     private readonly channelRepository: Repository<Channel>,
   ) {}
 
-  async createMessage(params: CreateMessageParams): Promise<Message> {
+  async createMessage({
+    user,
+    messageContent,
+    channelId,
+  }: CreateMessageParams): Promise<CreateMessageResponse> {
     const channel = await this.channelRepository.findOne({
-      where: { id: params.channelId },
+      where: { id: channelId },
       relations: ['sender', 'receiver', 'lastMessageSent'],
     });
     if (!channel)
@@ -24,22 +28,19 @@ export class MessagesService {
         'This Channel Does Not Exist',
         HttpStatus.BAD_REQUEST,
       );
-    if (
-      channel.sender.id !== params.user.id &&
-      channel.receiver.id !== params.user.id
-    )
+    if (channel.sender.id !== user.id && channel.receiver.id !== user.id)
       throw new HttpException('Users Do Not Match', HttpStatus.FORBIDDEN);
 
     const newMessage = this.messageRepository.create({
-      messageContent: params.messageContent,
+      messageContent,
       channel,
-      sender: instanceToPlain(params.user),
+      sender: instanceToPlain(user),
     });
 
     const savedMessage = await this.messageRepository.save(newMessage);
     channel.lastMessageSent = savedMessage;
-    await this.channelRepository.save(channel);
-    return savedMessage;
+    const updatedChannel = await this.channelRepository.save(channel);
+    return { message: savedMessage, channel: updatedChannel };
   }
 
   async getMessagesByChannelId(channelId: number): Promise<Message[]> {

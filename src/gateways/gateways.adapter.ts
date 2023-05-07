@@ -27,7 +27,6 @@ export class WebsocketAdapter extends IoAdapter {
         DISCORD_SESSION_ID,
         process.env.SECRET_CODE,
       );
-      console.log(signedCookie);
       if (!signedCookie) return next(new Error('Error signing cookie'));
       const sessionDB = await sessionRepository.findOne({ id: signedCookie });
       const userDB = plainToInstance(

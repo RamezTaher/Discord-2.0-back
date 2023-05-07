@@ -12,6 +12,8 @@ import { Services } from '../utils/constants';
 import { AuthenticatedSocket } from '../utils/interfaces';
 import { Message } from '../utils/typeorm';
 import { IGatewaySessionManager } from './gateways.session';
+import { CreateMessageResponse } from 'src/utils/@types';
+import { channel } from 'diagnostics_channel';
 
 @WebSocketGateway({
   cors: {
@@ -25,14 +27,15 @@ export class MessagingGateway implements OnGatewayConnection {
     private readonly sessions: IGatewaySessionManager,
   ) {}
 
+  @WebSocketServer()
+  server: Server;
+
   handleConnection(socket: AuthenticatedSocket, ...args: any[]) {
     console.log('New Incoming Connection');
     console.log(socket.user);
     this.sessions.setUserSocket(socket.user.id, socket);
     socket.emit('connected', { status: 'good' });
   }
-  @WebSocketServer()
-  server: Server;
 
   @SubscribeMessage('createMessage')
   handleCreateMessage(@MessageBody() data: any) {
@@ -40,23 +43,25 @@ export class MessagingGateway implements OnGatewayConnection {
   }
 
   @OnEvent('message.create')
-  handleMessageCreateEvent(payload: Message) {
+  handleMessageCreateEvent(payload: CreateMessageResponse) {
     console.log('Inside message.create');
-    console.log(payload);
     const {
       sender: author,
       channel: { sender: creator, receiver },
-    } = payload;
+    } = payload.message;
 
     const senderSocket = this.sessions.getUserSocket(author.id);
     const receiverSocket =
       author.id === creator.id
         ? this.sessions.getUserSocket(receiver.id)
         : this.sessions.getUserSocket(creator.id);
-
     console.log(`Recipient Socket: ${JSON.stringify(receiverSocket.user)}`);
 
-    receiverSocket.emit('onMessage', payload);
-    senderSocket.emit('onMessage', payload);
+    if (receiverSocket) {
+      receiverSocket.emit('onMessage', payload);
+    }
+    if (senderSocket) {
+      senderSocket.emit('onMessage', payload);
+    }
   }
 }
