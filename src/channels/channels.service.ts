@@ -17,7 +17,7 @@ export class ChannelsService implements IChannelsService {
     @Inject(Services.MESSAGES)
     private readonly messageService: IMessagesService,
   ) {}
-  async createChannel(user: User, { email, message }: CreateChannelParams) {
+  async createChannel(user: User, { email }: CreateChannelParams) {
     const receiver = await this.userService.findUser({ email });
 
     if (!receiver)
