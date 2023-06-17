@@ -42,6 +42,12 @@ export type CreateMessageResponse = {
   channel: Channel;
 };
 
+export type DeleteMessageParams = {
+  userId: number;
+  channelId: number;
+  messageId: number;
+};
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }

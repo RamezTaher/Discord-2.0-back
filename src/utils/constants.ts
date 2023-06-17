@@ -2,7 +2,7 @@ export enum Routes {
   AUTH = 'auth',
   USERS = 'users',
   CHANNELS = 'channels',
-  MESSAGES = 'messages',
+  MESSAGES = 'channels/:id/messages',
 }
 export enum Services {
   AUTH = 'AUTH_SERVICE',

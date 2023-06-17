@@ -36,9 +36,9 @@ export class Channel {
   createdAt: number;
 
   @OneToOne(() => Message)
-  @JoinColumn({ name: 'last_message_sent' })
+  @JoinColumn()
   lastMessageSent: Message;
 
-  @UpdateDateColumn({ name: 'new_last_message_at' })
+  @UpdateDateColumn()
   lastMessageSentAt: Date;
 }

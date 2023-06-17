@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -28,17 +29,18 @@ export class MessagesController {
   @Post()
   async createMessage(
     @AuthUser() user: User,
-    @Body() createMessagePayload: CreateMessageDto,
+    @Param('id', ParseIntPipe) channelId: number,
+    @Body()
+    { messageContent }: CreateMessageDto,
   ) {
-    const msg = await this.messagesService.createMessage({
-      ...createMessagePayload,
-      user,
-    });
+    const params = { user, channelId, messageContent };
+    const msg = await this.messagesService.createMessage(params);
+
     this.eventEmitter.emit('message.create', msg);
-    return msg;
+    return;
   }
 
-  @Get(':id')
+  @Get()
   async getMessagesByChannelId(
     @AuthUser() user: User,
     @Param('id', ParseIntPipe) channelId: number,
@@ -47,5 +49,18 @@ export class MessagesController {
       channelId,
     );
     return { id: channelId, messages };
+  }
+
+  @Delete(':messageId')
+  async deleteMessageFromChannel(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) channelId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+  ) {
+    await this.messagesService.deleteMessage({
+      userId: user.id,
+      channelId,
+      messageId,
+    });
   }
 }

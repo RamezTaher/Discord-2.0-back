@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
-import { CreateMessageParams, CreateMessageResponse } from 'src/utils/@types';
+import {
+  CreateMessageParams,
+  CreateMessageResponse,
+  DeleteMessageParams,
+} from 'src/utils/@types';
 import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
 
@@ -51,5 +55,50 @@ export class MessagesService {
     });
 
     return messages;
+  }
+
+  async deleteMessage(params: DeleteMessageParams) {
+    const channel = await this.channelRepository
+      .createQueryBuilder('channel')
+      .where('id = :channelId', { channelId: params.channelId })
+      .leftJoinAndSelect('channel.lastMessageSent', 'lastMessageSent')
+      .leftJoinAndSelect('channel.messages', 'message')
+      .where('channel.id = message.channelId')
+      .orderBy('message.createdAt', 'DESC')
+      .limit(5)
+      .getOne();
+
+    if (!channel)
+      throw new HttpException('channel not found', HttpStatus.BAD_REQUEST);
+
+    const message = await this.messageRepository.findOne({
+      id: params.messageId,
+      sender: { id: params.userId },
+      channel: { id: params.channelId },
+    });
+    if (!message)
+      throw new HttpException('Cannot delete message', HttpStatus.BAD_REQUEST);
+    if (channel.lastMessageSent.id !== message.id)
+      return this.messageRepository.delete({ id: message.id });
+
+    // Deleting Last Message
+    const size = channel.messages.length;
+    const SECOND_MESSAGE_INDEX = 1;
+    if (size <= 1) {
+      console.log('Last Message Sent is deleted');
+      await this.channelRepository.update(
+        { id: params.channelId },
+        { lastMessageSent: null },
+      );
+      await this.messageRepository.delete({ id: message.id });
+    } else {
+      console.log('There are more than 1 message');
+      const newLastMessage = channel.messages[SECOND_MESSAGE_INDEX];
+      await this.channelRepository.update(
+        { id: params.channelId },
+        { lastMessageSent: newLastMessage },
+      );
+      await this.messageRepository.delete({ id: message.id });
+    }
   }
 }

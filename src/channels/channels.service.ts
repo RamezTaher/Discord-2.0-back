@@ -84,7 +84,10 @@ export class ChannelsService implements IChannelsService {
   }
 
   async getChannelById(id: number): Promise<Channel> {
-    const channel = await this.channelRepository.findOne(id);
+    const channel = await this.channelRepository.findOne({
+      where: { id },
+      relations: ['lastMessageSent'],
+    });
 
     return channel;
   }

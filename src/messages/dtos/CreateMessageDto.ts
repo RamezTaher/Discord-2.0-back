@@ -4,8 +4,4 @@ export class CreateMessageDto {
   @IsNotEmpty()
   @IsString()
   messageContent: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  channelId: number;
 }
