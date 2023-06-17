@@ -14,7 +14,7 @@ import { AuthenticatedSocket } from '../utils/interfaces';
 import { Channel, Message } from '../utils/typeorm';
 import { IGatewaySessionManager } from './gateways.session';
 import { CreateMessageResponse } from 'src/utils/@types';
-import { channel } from 'diagnostics_channel';
+import { IChannelsService } from 'src/channels/channels';
 
 @WebSocketGateway({
   cors: {
@@ -26,6 +26,8 @@ export class MessagingGateway implements OnGatewayConnection {
   constructor(
     @Inject(Services.GATEWAYS_SESSION_MANAGER)
     private readonly sessions: IGatewaySessionManager,
+    @Inject(Services.CHANNELS)
+    private readonly channelsService: IChannelsService,
   ) {}
 
   @WebSocketServer()
@@ -76,11 +78,27 @@ export class MessagingGateway implements OnGatewayConnection {
     }
   }
 
-  @OnEvent('conversation.create')
+  @OnEvent('channel.create')
   handleConversationCreateEvent(payload: Channel) {
     console.log('Inside conversation.create');
     console.log(payload.receiver);
     const receiverSocket = this.sessions.getUserSocket(payload.receiver.id);
     if (receiverSocket) receiverSocket.emit('onConversation', payload);
+  }
+
+  @OnEvent('message.delete')
+  async handleMessageDelete(payload) {
+    console.log('Inside message.delete');
+    console.log(payload);
+    const channel = await this.channelsService.getChannelById(
+      payload.channelId,
+    );
+    if (!channel) return;
+    const { sender, receiver } = channel;
+    const receipientSocket =
+      sender.id === payload.userId
+        ? this.sessions.getUserSocket(receiver.id)
+        : this.sessions.getUserSocket(sender.id);
+    if (receipientSocket) receipientSocket.emit('onMessageDelete', payload);
   }
 }

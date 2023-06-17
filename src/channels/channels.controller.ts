@@ -33,7 +33,7 @@ export class ChannelsController {
       user,
       createChannelPayload,
     );
-    this.events.emit('conversation.create', channel);
+    this.events.emit('channel.create', channel);
     return instanceToPlain(channel);
   }
 

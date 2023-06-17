@@ -63,7 +63,9 @@ export class MessagesService {
       .where('id = :channelId', { channelId: params.channelId })
       .leftJoinAndSelect('channel.lastMessageSent', 'lastMessageSent')
       .leftJoinAndSelect('channel.messages', 'message')
-      .where('channel.id = message.channelId')
+      .where('channel.id = :channelId', {
+        channelId: params.channelId,
+      })
       .orderBy('message.createdAt', 'DESC')
       .limit(5)
       .getOne();
@@ -90,7 +92,7 @@ export class MessagesService {
         { id: params.channelId },
         { lastMessageSent: null },
       );
-      await this.messageRepository.delete({ id: message.id });
+      return this.messageRepository.delete({ id: message.id });
     } else {
       console.log('There are more than 1 message');
       const newLastMessage = channel.messages[SECOND_MESSAGE_INDEX];
@@ -98,7 +100,7 @@ export class MessagesService {
         { id: params.channelId },
         { lastMessageSent: newLastMessage },
       );
-      await this.messageRepository.delete({ id: message.id });
+      return this.messageRepository.delete({ id: message.id });
     }
   }
 }
