@@ -87,18 +87,19 @@ export class MessagingGateway implements OnGatewayConnection {
   }
 
   @OnEvent('message.delete')
-  async handleMessageDelete(payload) {
+  async handleMessageDelete(payload: any) {
     console.log('Inside message.delete');
-    console.log(payload);
     const channel = await this.channelsService.getChannelById(
       payload.channelId,
     );
     if (!channel) return;
     const { sender, receiver } = channel;
-    const receipientSocket =
+    const receiverSocket =
       sender.id === payload.userId
         ? this.sessions.getUserSocket(receiver.id)
         : this.sessions.getUserSocket(sender.id);
-    if (receipientSocket) receipientSocket.emit('onMessageDelete', payload);
+    if (receiverSocket) receiverSocket.emit('onMessageDelete', payload);
+    console.log(sender.id === payload.userId);
+    console.log(receiverSocket);
   }
 }
