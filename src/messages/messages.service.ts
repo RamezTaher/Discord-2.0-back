@@ -66,7 +66,7 @@ export class MessagesService {
       .where('channel.id = :channelId', {
         channelId: params.channelId,
       })
-      .orderBy('message.createdAt', 'DESC')
+      .orderBy('message.sentAt', 'DESC')
       .limit(5)
       .getOne();
 
