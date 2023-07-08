@@ -45,14 +45,48 @@ export class MessagingGateway implements OnGatewayConnection {
     console.log('Create Message');
   }
 
-  @SubscribeMessage('onClientConnect')
-  onClientConnect(
+  @SubscribeMessage('onChannelJoin')
+  onChannelJoin(
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onClientConnect');
-    console.log(data);
-    console.log(client.user);
+    console.log('onChannelJoin');
+    client.join(data.channelId);
+    console.log(client.rooms);
+    client.to(data.channelId).emit('userJoin');
+  }
+
+  @SubscribeMessage('onChannelLeave')
+  onChannelLeave(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log('onChannelLeave');
+    client.leave(data.channelId);
+    console.log(client.rooms);
+    client.to(data.channelId).emit('userLeave');
+  }
+
+  @SubscribeMessage('onTypingStart')
+  onTypingStart(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log('onTypingStart');
+    console.log(data.channelId);
+    console.log(client.rooms);
+    client.to(data.channelId).emit('onTypingStart');
+  }
+
+  @SubscribeMessage('onTypingStop')
+  onTypingStop(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log('onTypingStop');
+    console.log(data.channelId);
+    console.log(client.rooms);
+    client.to(data.channelId).emit('onTypingStop');
   }
 
   @OnEvent('message.create')
