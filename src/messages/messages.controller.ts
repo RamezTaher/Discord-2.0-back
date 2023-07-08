@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { User } from 'src/utils/typeorm';
 import { CreateMessageDto } from './dtos/CreateMessageDto';
 import { IMessagesService } from './messages';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UpdateMessageDto } from './dtos/UpdateMessageDto';
 
 @UseGuards(AuthenticatedGuard)
 @Controller(Routes.MESSAGES)
@@ -68,5 +70,17 @@ export class MessagesController {
       channelId,
     });
     return { channelId, messageId };
+  }
+
+  @Patch(':messageId')
+  async updateMessage(
+    @AuthUser() { id: userId }: User,
+    @Param('id') channelId: number,
+    @Param('messageId') messageId: number,
+    @Body() { messageContent }: UpdateMessageDto,
+  ) {
+    const params = { userId, messageContent, channelId, messageId };
+    const message = await this.messagesService.updateMessage(params);
+    return message;
   }
 }

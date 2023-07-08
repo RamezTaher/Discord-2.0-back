@@ -48,6 +48,13 @@ export type DeleteMessageParams = {
   messageId: number;
 };
 
+export type UpdateMessageParams = {
+  channelId: number;
+  messageId: number;
+  userId: number;
+  messageContent: string;
+};
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }

@@ -5,6 +5,7 @@ import {
   CreateMessageParams,
   CreateMessageResponse,
   DeleteMessageParams,
+  UpdateMessageParams,
 } from 'src/utils/@types';
 import { Channel, Message } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';
@@ -102,5 +103,16 @@ export class MessagesService {
       );
       return this.messageRepository.delete({ id: message.id });
     }
+  }
+
+  async updateMessage(params: UpdateMessageParams) {
+    const messageDB = await this.messageRepository.findOne({
+      id: params.messageId,
+      sender: { id: params.userId },
+    });
+    if (!messageDB)
+      throw new HttpException('Cannot Edit Message', HttpStatus.BAD_REQUEST);
+    messageDB.messageContent = params.messageContent;
+    return this.messageRepository.save(messageDB);
   }
 }
