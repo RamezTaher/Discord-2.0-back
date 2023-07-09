@@ -72,9 +72,6 @@ export class MessagingGateway implements OnGatewayConnection {
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onTypingStart');
-    console.log(data.channelId);
-    console.log(client.rooms);
     client.to(data.channelId).emit('onTypingStart');
   }
 
@@ -83,9 +80,6 @@ export class MessagingGateway implements OnGatewayConnection {
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onTypingStop');
-    console.log(data.channelId);
-    console.log(client.rooms);
     client.to(data.channelId).emit('onTypingStop');
   }
 
