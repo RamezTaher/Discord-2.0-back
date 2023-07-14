@@ -107,9 +107,13 @@ export class MessagesService {
 
   async updateMessage(params: UpdateMessageParams) {
     const messageDB = await this.messageRepository.findOne({
-      id: params.messageId,
-      sender: { id: params.userId },
+      where: {
+        id: params.messageId,
+        sender: { id: params.userId },
+      },
+      relations: ['channel', 'channel.sender', 'channel.receiver', 'sender'],
     });
+
     if (!messageDB)
       throw new HttpException('Cannot Edit Message', HttpStatus.BAD_REQUEST);
     messageDB.messageContent = params.messageContent;

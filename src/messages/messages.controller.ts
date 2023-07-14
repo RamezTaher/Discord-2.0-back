@@ -81,6 +81,7 @@ export class MessagesController {
   ) {
     const params = { userId, messageContent, channelId, messageId };
     const message = await this.messagesService.updateMessage(params);
+    this.eventEmitter.emit('message.update', message);
     return message;
   }
 }
