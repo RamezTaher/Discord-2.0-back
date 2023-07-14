@@ -97,6 +97,7 @@ export class MessagesService {
     } else {
       console.log('There are more than 1 message');
       const newLastMessage = channel.messages[SECOND_MESSAGE_INDEX];
+      console.log('new LAst MEsage', newLastMessage);
       await this.channelRepository.update(
         { id: params.channelId },
         { lastMessageSent: newLastMessage },
