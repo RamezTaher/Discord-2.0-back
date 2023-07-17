@@ -1,11 +1,11 @@
 import { Channel } from './entities/Channel';
-import { GroupChannel } from './entities/GroupChannel';
+import { Group } from './entities/Group';
 import { Message } from './entities/Message';
 import { Session } from './entities/Session';
 import { User } from './entities/User';
 
-const entities = [User, Session, Channel, Message, GroupChannel];
+const entities = [User, Session, Channel, Message, Group];
 
 export default entities;
 
-export { User, Session, Channel, Message, GroupChannel };
+export { User, Session, Channel, Message, Group };

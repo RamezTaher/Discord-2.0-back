@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Channel } from './Channel';
 import { User } from './User';
-import { GroupChannel } from './GroupChannel';
+import { Group } from './Group';
 
 @Entity({ name: 'messages' })
 export class Message {
@@ -26,6 +26,6 @@ export class Message {
   @ManyToOne(() => Channel, (channel) => channel.messages)
   channel: Channel;
 
-  @ManyToOne(() => GroupChannel, (group) => group.messages)
-  group?: GroupChannel;
+  @ManyToOne(() => Group, (group) => group.messages)
+  group?: Group;
 }

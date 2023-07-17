@@ -11,8 +11,8 @@ import {
 import { Message } from './Message';
 import { User } from './User';
 
-@Entity({ name: 'group_channels' })
-export class GroupChannel {
+@Entity({ name: 'groups' })
+export class Group {
   @PrimaryGeneratedColumn()
   id: number;
 
