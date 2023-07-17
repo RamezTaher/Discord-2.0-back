@@ -55,6 +55,12 @@ export type UpdateMessageParams = {
   messageContent: string;
 };
 
+export type CreateGroupParams = {
+  creator: User;
+  title?: string;
+  users: string[];
+};
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
