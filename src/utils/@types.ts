@@ -68,7 +68,7 @@ export type FetchGroupsParams = {
 export type CreateGroupMessageParams = {
   groupId: number;
   messageContent: string;
-  author: User;
+  sender: User;
 };
 
 export interface AuthenticatedRequest extends Request {

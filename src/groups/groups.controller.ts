@@ -22,7 +22,7 @@ export class GroupsController {
   }
 
   @Get(':id')
-  getGroup(@AuthUser() user: User, @Param('id') id: number) {
-    return this.groupsService.getGroupById(id);
+  getGroupById(@AuthUser() user: User, @Param('id') id: number) {
+    return this.groupsService.findGroupById(id);
   }
 }
