@@ -61,6 +61,10 @@ export type CreateGroupParams = {
   users: string[];
 };
 
+export type FetchGroupsParams = {
+  userId: number;
+};
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
