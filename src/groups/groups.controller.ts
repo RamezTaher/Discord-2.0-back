@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { Routes, Services } from '../utils/constants';
 import { IGroupService } from './groups';
 import { AuthUser } from 'src/utils/decorators';
@@ -19,5 +19,10 @@ export class GroupsController {
   @Get()
   getGroups(@AuthUser() user: User) {
     return this.groupsService.getGroups({ userId: user.id });
+  }
+
+  @Get(':id')
+  getGroup(@AuthUser() user: User, @Param('id') id: number) {
+    return this.groupsService.getGroupById(id);
   }
 }
