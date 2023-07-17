@@ -9,6 +9,7 @@ import { ChannelsModule } from './channels/channels.module';
 import { MessagesModule } from './messages/messages.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GatewaysModule } from './gateways/gateways.module';
+import { GroupsModule } from './groups/groups.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GatewaysModule } from './gateways/gateways.module';
     MessagesModule,
     EventEmitterModule.forRoot(),
     GatewaysModule,
+    GroupsModule,
   ],
   controllers: [],
   providers: [],

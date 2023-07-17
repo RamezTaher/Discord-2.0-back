@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Message } from './Message';
+import { GroupChannel } from './GroupChannel';
 
 @Entity({ name: 'users' })
 export class User {
@@ -32,4 +34,7 @@ export class User {
   @OneToMany(() => Message, (message) => message.sender)
   @JoinColumn()
   messages: Message[];
+
+  @ManyToMany(() => GroupChannel, (group) => group.users)
+  groups: GroupChannel[];
 }
