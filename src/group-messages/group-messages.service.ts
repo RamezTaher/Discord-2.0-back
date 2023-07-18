@@ -35,6 +35,7 @@ export class GroupMessagesService implements IGroupMessageService {
     });
     const savedMessage = await this.groupMessageRepository.save(groupMessage);
     group.lastMessageSent = savedMessage;
-    return this.groupsService.saveGroup(group);
+    const updatedGroup = await this.groupsService.saveGroup(group);
+    return { message: savedMessage, group: updatedGroup };
   }
 }

@@ -1,13 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, ManyToOne } from 'typeorm';
 import { Channel } from './Channel';
-import { User } from './User';
-import { Group } from './Group';
 import { BaseMessage } from './BaseMessage';
 
 @Entity({ name: 'messages' })

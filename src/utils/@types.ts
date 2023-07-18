@@ -1,4 +1,4 @@
-import { Channel, Message, User } from './typeorm';
+import { Channel, Group, GroupMessage, Message, User } from './typeorm';
 
 export type CreateUserParams = {
   email: string;
@@ -69,6 +69,11 @@ export type CreateGroupMessageParams = {
   groupId: number;
   messageContent: string;
   sender: User;
+};
+
+export type CreateGroupMessageResponse = {
+  message: GroupMessage;
+  group: Group;
 };
 
 export interface AuthenticatedRequest extends Request {

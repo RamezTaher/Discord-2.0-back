@@ -14,7 +14,7 @@ export abstract class BaseMessage {
   messageContent: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: number;
+  sentAt: Date;
 
   @ManyToOne(() => User, (user) => user.messages)
   sender: User;
