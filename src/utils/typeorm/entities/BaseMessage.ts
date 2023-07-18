@@ -10,11 +10,11 @@ export abstract class BaseMessage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   messageContent: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  sentAt: Date;
+  sentAt: number;
 
   @ManyToOne(() => User, (user) => user.messages)
   sender: User;

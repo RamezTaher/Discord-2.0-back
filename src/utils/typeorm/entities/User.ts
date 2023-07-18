@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Message } from './Message';
 import { Group } from './Group';
+import { BaseMessage } from './BaseMessage';
 
 @Entity({ name: 'users' })
 export class User {
