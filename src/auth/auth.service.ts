@@ -17,9 +17,11 @@ export class AuthService implements IAuthService {
     @Inject(Services.USERS) private readonly userService: IUsersService,
   ) {}
   async validateUser(loginUserParams: LoginUserParams) {
-    const user = await this.userService.findUser({
-      email: loginUserParams.email,
-    });
+    const user = await this.userService.findUser(
+      { email: loginUserParams.email },
+      { selectAll: true },
+    );
+    console.log(user);
 
     if (!user)
       throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);

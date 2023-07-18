@@ -59,22 +59,8 @@ export class ChannelsService implements IChannelsService {
     const channels = await this.channelRepository
       .createQueryBuilder('channel')
       .leftJoinAndSelect('channel.lastMessageSent', 'lastMessageSent')
-      .leftJoin('channel.sender', 'sender')
-      .addSelect([
-        'sender.id',
-        'sender.firstName',
-        'sender.lastName',
-        'sender.email',
-        'sender.userName',
-      ])
-      .leftJoin('channel.receiver', 'receiver')
-      .addSelect([
-        'receiver.id',
-        'receiver.firstName',
-        'receiver.lastName',
-        'receiver.email',
-        'receiver.userName',
-      ])
+      .leftJoinAndSelect('channel.sender', 'sender')
+      .leftJoinAndSelect('channel.receiver', 'receiver')
       .where('sender.id=:id', { id })
       .orWhere('receiver.id=:id', { id })
       .orderBy('channel.lastMessageSentAt', 'DESC')

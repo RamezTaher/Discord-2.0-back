@@ -76,6 +76,10 @@ export type CreateGroupMessageResponse = {
   group: Group;
 };
 
+export type FindUserOptions = Partial<{
+  selectAll: boolean;
+}>;
+
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
