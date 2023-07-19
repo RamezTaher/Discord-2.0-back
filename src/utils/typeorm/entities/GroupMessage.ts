@@ -1,27 +1,15 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { BaseMessage } from './BaseMessage';
 import { Group } from './Group';
-import { User } from './User';
+import { GroupMessageAttachment } from './GroupMessageAttachment';
+import { MessageAttachment } from './MessageAttachment';
 
 @Entity({ name: 'group_messages' })
-export class GroupMessage {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column('text', { nullable: true })
-  messageContent: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  sentAt: number;
-
-  @ManyToOne(() => User, (user) => user.messages)
-  sender: User;
-
+export class GroupMessage extends BaseMessage {
   @ManyToOne(() => Group, (group) => group.messages)
   group: Group;
+
+  @OneToMany(() => GroupMessageAttachment, (attachment) => attachment.message)
+  @JoinColumn()
+  attachments?: MessageAttachment[];
 }

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+import { Services } from '../utils/constants';
 import { AuthController } from './auth.controller';
-import { Services } from 'src/utils/constants';
-import { UsersModule } from 'src/users/users.module';
+import { AuthService } from './auth.service';
 import { LocalStrategy } from './utils/LocalStrategy';
-import { SessionSerializer } from './utils/SessionSerialize';
-import { PassportModule } from '@nestjs/passport';
+import { SessionSerializer } from './utils/SessionSerializer';
 
 @Module({
-  imports: [UsersModule, PassportModule.register({ session: true })],
+  imports: [UsersModule],
+  controllers: [AuthController],
   providers: [
     LocalStrategy,
     SessionSerializer,
@@ -17,6 +17,5 @@ import { PassportModule } from '@nestjs/passport';
       useClass: AuthService,
     },
   ],
-  controllers: [AuthController],
 })
 export class AuthModule {}

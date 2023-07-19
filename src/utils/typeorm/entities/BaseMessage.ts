@@ -11,11 +11,11 @@ export abstract class BaseMessage {
   id: number;
 
   @Column('text', { nullable: true })
-  messageContent: string;
+  content: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  sentAt: number;
+  createdAt: number;
 
   @ManyToOne(() => User, (user) => user.messages)
-  sender: User;
+  author: User;
 }

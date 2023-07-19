@@ -10,8 +10,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './User';
 import { GroupMessage } from './GroupMessage';
+import { Message } from './Message';
+import { User } from './User';
 
 @Entity({ name: 'groups' })
 export class Group {
@@ -29,6 +30,10 @@ export class Group {
   @JoinColumn()
   creator: User;
 
+  @OneToOne(() => User, { createForeignKeyConstraints: false })
+  @JoinColumn()
+  owner: User;
+
   @OneToMany(() => GroupMessage, (message) => message.group, {
     cascade: ['insert', 'remove', 'update'],
   })
@@ -44,4 +49,7 @@ export class Group {
 
   @UpdateDateColumn({ name: 'updated_at' })
   lastMessageSentAt: Date;
+
+  @Column({ nullable: true })
+  avatar?: string;
 }

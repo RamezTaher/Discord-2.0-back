@@ -1,6 +1,6 @@
-import { LoginUserParams } from 'src/utils/@types';
-import { User } from 'src/utils/typeorm';
+import { User } from '../utils/typeorm';
+import { ValidateUserDetails } from '../utils/types';
 
 export interface IAuthService {
-  validateUser(params: LoginUserParams): Promise<User | null>;
+  validateUser(userCredentials: ValidateUserDetails): Promise<User | null>;
 }

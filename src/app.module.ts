@@ -1,22 +1,32 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import entities from './utils/typeorm';
-import { PassportModule } from '@nestjs/passport';
-import { ChannelsModule } from './channels/channels.module';
+import { ConversationsModule } from './conversations/conversations.module';
 import { MessagesModule } from './messages/messages.module';
+import { GatewayModule } from './gateway/gateway.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { GatewaysModule } from './gateways/gateways.module';
-import { GroupsModule } from './groups/groups.module';
-import { GroupMessagesModule } from './group-messages/group-messages.module';
+import entities from './utils/typeorm';
+import { GroupModule } from './groups/group.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { FriendRequestsModule } from './friend-requests/friend-requests.module';
+import { FriendsModule } from './friends/friends.module';
+import { EventsModule } from './events/events.module';
+import { ThrottlerBehindProxyGuard } from './utils/throttler';
+import { ExistsModule } from './exists/exists.module';
+import { MessageAttachmentsModule } from './message-attachments/message-attachments.module';
+
+let envFilePath = '.env.development';
+if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
-    ConfigModule.forRoot({ envFilePath: '.env.development' }),
+    ConfigModule.forRoot({ envFilePath }),
     PassportModule.register({ session: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -29,14 +39,27 @@ import { GroupMessagesModule } from './group-messages/group-messages.module';
       entities,
       logging: false,
     }),
-    ChannelsModule,
+    ConversationsModule,
     MessagesModule,
+    GatewayModule,
     EventEmitterModule.forRoot(),
-    GatewaysModule,
-    GroupsModule,
-    GroupMessagesModule,
+    GroupModule,
+    FriendRequestsModule,
+    FriendsModule,
+    EventsModule,
+    ExistsModule,
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 10,
+    }),
+    MessageAttachmentsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerBehindProxyGuard,
+    },
+  ],
 })
 export class AppModule {}
