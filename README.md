@@ -21,7 +21,4 @@ This is the backend for the [Discord Clone React](https://github.com/RamezTaher/
 
    ```
 
-```
-
 4. Run `yarn start:dev` or `npm run start:dev` depending on which package manager you use to start the project in development mode.
-```
